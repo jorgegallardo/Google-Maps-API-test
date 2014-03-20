@@ -43,7 +43,9 @@ function displayLocation(position) {
 	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";
 
 	if(map==null)
-		showMap(position.coords);
+		showMap(position.coords); //draws initial marker
+	else
+		scrollMapToPosition(position.coords); //adds new markers to map upon moving
 }
 
 function displayError(error) {
@@ -113,4 +115,14 @@ function addMarker(map, latlong, title, content) {
 	google.maps.event.addListener(marker, "click", function() {
 		infoWindow.open(map);
 	})
+
+//this function will center the map as we move, and add a marker each time a new position is calculated
+function scrollMapToPosition(coords) {
+	var latitude = coords.latitude;
+	var longitude = coords.longitude;
+	var latlong = new google.maps.LatLng(latitude, longitude); //constructor of LatLng object
+
+	map.panTo(latlong); //scrolls map by taking in LatLng object created above as the new center point
+
+	addMarker(map, latlong, "Your new location", "You moved to: " + latitude + ", " + longitude);
 }
